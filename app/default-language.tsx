@@ -17,12 +17,16 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 export function DefaultLanguageChange({
   languages,
+  initialDefaultLanguage,
 }: {
   languages: { value: string; label: string }[];
+  initialDefaultLanguage?: string;
 }) {
   const searchParams = useSearchParams();
   const defaultLanguageFromSearchParams =
-    searchParams.get("default-language") || languages[0].value;
+    searchParams.get("default-language") ||
+    initialDefaultLanguage ||
+    languages[0].value;
   const [defaultLanguage, setDefaultLanguage] = useState(
     defaultLanguageFromSearchParams
   );

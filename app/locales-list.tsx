@@ -41,9 +41,35 @@ export default async function LocalesList({
     return <NoLocale thePath={thePath} />;
   }
 
+  let defaultLanguageToUse = defaultLanguage;
+
+  if (!defaultLanguageToUse) {
+    try {
+      const typesFile = path.join(thePath, ".generated", "types.ts");
+      const stats = await fs.stat(typesFile);
+      if (!stats.isFile()) {
+        console.log(`No types file found in ${thePath}`);
+      } else {
+        const typesFileContent = await fs.readFile(typesFile, "utf8");
+        const match = typesFileContent.match(
+          /export\s+const\s+defaultLanguage:\s*SupportedLanguage\s*=\s*'(\w+)';/
+        );
+        if (match && match.length > 1 && match[1]) {
+          defaultLanguageToUse = match[1];
+        }
+      }
+    } catch (error) {
+      console.log(`No types file found in ${thePath}`, error);
+    }
+  }
+
+  if (!defaultLanguageToUse) {
+    defaultLanguageToUse = languages.langs[0];
+  }
+
   const defaultDisplayName = new Intl.DisplayNames(["en"], {
     type: "language",
-  }).of(defaultLanguage || languages.langs[0]);
+  }).of(defaultLanguageToUse);
 
   return (
     <div className="w-full">
@@ -58,6 +84,7 @@ export default async function LocalesList({
           </CardHeader>
           <CardContent>
             <DefaultLanguageChange
+              initialDefaultLanguage={defaultLanguageToUse}
               languages={languages.langs.map((l) => ({
                 value: l,
                 label:
