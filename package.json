@@ -88,6 +88,7 @@
     "react-hook-form": "^7.51.5",
     "react-resizable-panels": "^2.0.19",
     "remark-gfm": "^4.0.0",
+    "simple-i18n-next": "^0.0.25",
     "sonner": "^1.4.41",
     "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7",
